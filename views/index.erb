@@ -1,0 +1,11 @@
+<html>
+  <head></head>
+  <body>
+    <h1>Albums</h1>
+
+    <% @albums.map do |album| %>
+    <div><br>Title: <a href="/albums/<%=album.id%>"> <%= album.title %></a><br>Release year: <%= album.release_year %><br></div>
+      <% end %>
+    </div>
+
+  </body>

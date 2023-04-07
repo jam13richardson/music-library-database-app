@@ -12,15 +12,6 @@ describe AlbumRepository do
     reset_albums_table
   end
 
-  it 'finds all albums' do
-    repo = AlbumRepository.new
-
-    albums = repo.all
-    
-    expect(albums.length).to eq(12)
-    expect(albums.first.title).to eq('Doolittle')
-    expect(albums.first.artist_id).to eq(1)
-  end
 
   it 'finds one album' do
     repo = AlbumRepository.new
@@ -56,5 +47,15 @@ describe AlbumRepository do
 
     expect(albums.length).to eq(11)
     expect(albums.first.id).to eq(2)
+  end
+
+  it 'finds all albums' do
+    repo = AlbumRepository.new
+
+    albums = repo.all
+    
+    expect(albums.length).to eq(12)
+    expect(albums.first.title).to eq('Doolittle')
+    expect(albums.first.artist_id).to eq(1)
   end
 end

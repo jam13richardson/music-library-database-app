@@ -14,6 +14,12 @@ class Application < Sinatra::Base
     also_reload 'lib/artist_repository'
   end
 
+  get "/artists" do
+    repo = ArtistRepository.new
+    @artists = repo.all
+    return erb(:all_artists)
+  end
+
   get '/albums' do 
     repo = AlbumRepository.new
     albums = repo.all 
@@ -23,11 +29,33 @@ class Application < Sinatra::Base
   return response 
   end
 
-  get "/artists" do
-    repo = ArtistRepository.new
-    artists = repo.all
-    response = artists.map { |artist| artist.name }.join(", ")
-    return response
+  # get "/artists" do
+  #   repo = ArtistRepository.new
+  #   artists = repo.all
+  #   response = artists.map { |artist| artist.name }.join(", ")
+  #   return response
+  # end
+
+  # get "/artists/:id" do
+  #   repo = ArtistRepository.new
+  #   artist_id = params[:id]
+  #   @returned_artist = repo.find(artist_id)
+  #   return erb(:artists)
+  # end
+  
+  get "/albums/:id" do
+    repo = AlbumRepository.new
+    repo2 = ArtistRepository.new
+    album_id = params[:id]
+    @returned_album = repo.find(album_id)
+    @returned_artist = repo2.find(@returned_album.artist_id)
+    return erb(:albums)
+  end
+
+  get "/albums" do
+    repo = AlbumRepository.new
+    @albums = repo.all
+    return erb(:index)
   end
 
   post '/albums' do 
@@ -50,4 +78,24 @@ post "/artists" do
     repo.create(artist)
     return ""
   end
+
+  get "/albums/:id" do
+    repo = AlbumRepository.new
+    repo2 = ArtistRepository.new
+    album_id = params[:id]
+    @returned_album = repo.find(album_id)
+    @returned_artist = repo2.find(@returned_album.artist_id)
+    return erb(:albums_html)
+  end
+
+  get "/artists/:id" do
+    repo = ArtistRepository.new
+    artist_id = params[:id]
+    @returned_artist = repo.find(artist_id)
+    return erb(:artists)
+  end
+
+
 end
+
+

@@ -16,24 +16,27 @@ describe Application do
     connection.exec(seed_sql)
   end
 
-xcontext 'GET /albums' do 
-  it 'should return the list of albums' do
-    response = get('/albums')
+#old test - 
+# context 'GET /albums' do 
+#   it 'should return the list of albums' do
+#     response = get('/albums')
 
-    expected_response = 'Doolittle, Surfer Rosa, Super Trouper, Bossanova, Lover, Folklore, I Put a Spell on You, Baltimore, Here Comes the Sun, Fodder on My Wings, Ring Ring'
+#     expected_response = 'Doolittle, Surfer Rosa, Super Trouper, Bossanova, Lover, Folklore, I Put a Spell on You, Baltimore, Here Comes the Sun, Fodder on My Wings, Ring Ring'
 
-    expect(response.status).to eq(200)
-    expect(response.body).to eq(expected_response)
-end
-end
+#     expect(response.status).to eq(200)
+#     expect(response.body).to eq(expected_response)
+# end
+# end
 
- context "GET /artists" do
-    it "returns a list of artist names" do
-      response = get("/artists")
-      expected_response = "Pixies, ABBA, Taylor Swift, Nina Simone, Kiasmos"
-      expect(response.body).to eq(expected_response)
-    end
-  end
+#old test - 
+#  context "GET /artists" do
+#     it "returns a list of artist names" do
+#       response = get("/artists")
+#       expected_response = "Pixies, ABBA, Taylor Swift, Nina Simone, Kiasmos"
+#       expect(response.body).to eq(expected_response)
+#     end
+#   end
+
 
 context 'POST /albums' do
   it 'should vreate a new album' do
@@ -44,6 +47,26 @@ context 'POST /albums' do
   end 
 end
 
+context 'GET /albums/:id' do
+  it "returns info about album 1" do 
+    response = get('/albums/1')
+
+    expect(response.status).to eq(200)
+    expect(response.body).to include('<h1>Doolittle</h1>')
+    expect(response.body).to include('Release year: 1989')
+    expect(response.body).to include('Artist: Pixies')
+  end
+end
+
+  context "GET /albums" do
+    it "returns a list of album titles" do
+      response = get("/albums")
+      expect(response.status).to eq 200
+      expect(response.body).to include '<div><br>Title: Doolittle<br>Release year: 1989<br></div>'
+      expect(response.body).to include '<div><br>Title: Ring Ring<br>Release year: 1973<br></div>'
+    end
+  end
+
 context "POST /artists" do
     it "creates a new artist" do
       response = post("/artists", name: "Wild Nothing", genre: "Indie")
@@ -51,6 +74,30 @@ context "POST /artists" do
       expect(response.body).to eq("")
       response_2 = get("/artists")
       expect(response_2.body).to include "Wild Nothing"
+    end
+  end
+
+  context "GET /albums" do
+    it "returns a list of album titles with links" do
+      response = get("/albums")
+      expect(response.status).to eq 200
+      expect(response.body).to include '<div><br>Title: <a href="/albums/1"> Doolittle</a><br>Release year: 1989<br></div>'
+      expect(response.body).to include '<div><br>Title: <a href="/albums/12"> Ring Ring</a><br>Release year: 1973<br></div>'
+    end
+  end
+
+  context "GET /artists" do
+    it "returns single artist from its id in html" do
+      response = get("/artists/1") 
+      expect(response.status).to eq 200
+      expect(response.body).to include('Name: Pixies<br>')
+    end
+  end
+
+  context "GET /artists" do
+    it "returns a list of artist names in html with links for each" do
+      response = get("/artists")
+      expect(response.body).to include '<div><br>Name: <a href="/artists/1"> Pixies</a><br>Genre: Rock<br></div>'
     end
   end
 
