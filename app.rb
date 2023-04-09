@@ -79,6 +79,27 @@ post "/artists" do
     return ""
   end
 
+  get "/albums/new" do
+    return erb(:new_album_form)
+  end
+
+  post "/albums" do
+    if invalid_album_request_parameters?
+      status 400
+      return ''
+    else
+    title = params[:title]
+    release_year = params[:release_year]
+    artist_id = params[:artist_id]
+    new_album = Album.new
+    new_album.title = title
+    new_album.release_year = release_year
+    new_album.artist_id = artist_id
+    AlbumRepository.new.create(new_album)
+    return erb(:new_album_created)
+    end
+  end
+
   get "/albums/:id" do
     repo = AlbumRepository.new
     repo2 = ArtistRepository.new
@@ -87,6 +108,25 @@ post "/artists" do
     @returned_artist = repo2.find(@returned_album.artist_id)
     return erb(:albums_html)
   end
+
+  get "/artists/new" do
+    return erb(:new_artist_form)
+  end
+  
+  post "/artists" do
+      if invalid_artist_request_parameters?
+        status 400
+        return ''
+      else
+      name = params[:name]
+      genre = params[:genre]
+      new_artist = Artist.new
+      new_artist.name = name
+      new_artist.genre = genre
+      ArtistRepository.new.create(new_artist)
+      return erb(:new_artist_created)
+      end
+    end
 
   get "/artists/:id" do
     repo = ArtistRepository.new
